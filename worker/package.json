@@ -1,0 +1,20 @@
+{
+  "name": "overseer-worker",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "24/7 Mineflayer worker that executes OVERSEER plain-English orders",
+  "bin": {
+    "overseer-worker": "./overseer-worker.mjs"
+  },
+  "scripts": {
+    "start": "node overseer-worker.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "mineflayer": "^4.24.0",
+    "mineflayer-pathfinder": "^2.4.5"
+  }
+}
