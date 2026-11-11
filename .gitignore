@@ -1,4 +1,9 @@
+.env
 .env.local
 node_modules
 dist
 src/convex/_generated
+/freebuff-sites-build/
+
+# Local deploy credentials (never commit)
+.secrets/

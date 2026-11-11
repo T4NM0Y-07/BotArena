@@ -3,7 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router";
 
 import { Button } from "@/components/ui/button";
-import { Wordmark } from "@/components/keepcraft-ui";
+import { Wordmark } from "@/components/botarena-ui";
 
 export default function NotFound() {
   return (

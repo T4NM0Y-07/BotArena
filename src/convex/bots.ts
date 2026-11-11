@@ -164,7 +164,7 @@ export const create = mutation({
       host,
       port,
       username,
-      version: args.version.trim() || "1.21.4",
+      version: args.version.trim() || "auto",
       authMode: args.authMode,
       mode: args.mode,
       status: args.mode === "simulated" ? "connecting" : "offline",

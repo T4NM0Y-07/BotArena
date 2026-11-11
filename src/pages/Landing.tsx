@@ -14,10 +14,10 @@ import { Button } from "@/components/ui/button";
 import {
   LogoMark,
   ModeTag,
-  PixelAvatar,
-  StatusPill,
   Wordmark,
-} from "@/components/keepcraft-ui";
+} from "@/components/botarena-ui";
+import { PixelAvatar } from "@/components/botarena-ui";
+import { StatusPill } from "@/components/botarena-ui";
 import { useAuth } from "@/hooks/use-auth";
 
 const fadeUp = {
@@ -167,7 +167,7 @@ export default function Landing() {
               </h1>
 
               <p className="mt-7 max-w-md text-base leading-7 text-nb-ink/80 sm:text-lg">
-                KeepCrafting holds a Minecraft account on your server around the
+                BotArena holds a Minecraft account on your server around the
                 clock. Type an ordinary sentence, it becomes a step-by-step job,
                 and every move lands in one control room.
               </p>
@@ -209,7 +209,7 @@ export default function Landing() {
                 <div className="flex items-center justify-between gap-3 border-b-[3px] border-nb-ink bg-nb-ink px-4 py-2.5 text-nb-paper">
                   <span className="flex items-center gap-2 font-mono text-[10px] font-bold tracking-[0.14em] uppercase">
                     <CircleDot className="size-3 text-nb-lime" />
-                    KeepCrafting / console
+                    BotArena / console
                   </span>
                   <span className="flex gap-1">
                     <span className="size-2 border border-nb-paper/60" />
@@ -318,7 +318,7 @@ export default function Landing() {
               ))}
             </div>
             <span className="ml-auto hidden font-mono text-[10px] text-muted-foreground uppercase sm:block">
-              Java Edition · 1.8 – 1.21
+              Java Edition · 1.8 – latest
             </span>
           </div>
         </section>
@@ -482,7 +482,7 @@ export default function Landing() {
                   </span>
                 </div>
                 <pre className="nb-scroll flex-1 overflow-x-auto p-4 font-mono text-[11px] leading-6 sm:text-xs">
-{`$ npx keepcraft-worker \\
+{`$ npx botarena-worker \\
     --key 8f2c…a91d \\
     --host play.ironvale.net:25565
 
@@ -538,7 +538,7 @@ export default function Landing() {
           <div className="flex items-center gap-3">
             <LogoMark className="size-8" />
             <div>
-              <p className="font-display text-sm tracking-tight">KeepCrafting</p>
+              <p className="font-display text-sm tracking-tight">BotArena</p>
               <p className="font-mono text-[10px] text-muted-foreground">
                 Minecraft operations console
               </p>

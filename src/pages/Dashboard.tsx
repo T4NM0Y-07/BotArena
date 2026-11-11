@@ -28,11 +28,11 @@ import {
   AppBar,
   ModeTag,
   Panel,
-  PixelAvatar,
   SectionHeading,
   Stat,
   StatusPill,
-} from "@/components/keepcraft-ui";
+} from "@/components/botarena-ui";
+import { PixelAvatar } from "@/components/botarena-ui";
 import { useAuth } from "@/hooks/use-auth";
 import { timeAgo } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -91,7 +91,7 @@ export default function Dashboard() {
     host: "",
     port: "25565",
     username: "",
-    version: "1.21.4",
+    version: "auto",
     authMode: "offline" as AuthMode,
     mode: "simulated" as BotMode,
     autoReconnect: true,
@@ -416,13 +416,16 @@ export default function Dashboard() {
                   required
                 />
               </Field>
-              <Field label="Server version">
+              <Field
+                label="Server version"
+                hint="auto = newest version the server supports"
+              >
                 <Input
                   value={form.version}
                   onChange={(event) =>
                     setForm({ ...form, version: event.target.value })
                   }
-                  placeholder="1.21.4"
+                  placeholder="auto"
                 />
               </Field>
               <Field label="Login mode">

@@ -25,7 +25,7 @@ export const emailOtp = Email({
     } catch (error) {
       // Never surface the request itself: it carries the integration key.
       const message = error instanceof Error ? error.message : String(error);
-      throw new Error(`Could not send the OVERSEER access code: ${message}`);
+      throw new Error(`Could not send the BotArena access code: ${message}`);
     }
   },
 });

@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /**
- * OVERSEER companion worker.
+ * BotArena companion worker.
  *
  * Keeps one Minecraft account connected 24/7, claims plain-English orders from
- * the OVERSEER console over HTTPS, executes them with Mineflayer, and reports
+ * the BotArena console over HTTPS, executes them with Mineflayer, and reports
  * progress back so the web console stays live.
  *
- *   OVERSEER_URL=https://your-deployment.convex.site \
- *   OVERSEER_KEY=<bot key from the console> \
- *   node overseer-worker.mjs
+ *   BOTARENA_URL=https://your-deployment.convex.site \
+ *   BOTARENA_KEY=<bot key from the console> \
+ *   node botarena-worker.mjs
  */
 
 import mineflayer from "mineflayer";
@@ -20,13 +20,13 @@ try {
   console.warn("[worker] mineflayer-pathfinder not installed — movement falls back to nearby blocks.");
 }
 
-const BASE_URL = (process.env.OVERSEER_URL ?? "").replace(/\/+$/, "");
-const KEY = process.env.OVERSEER_KEY ?? "";
-const POLL_MS = Number(process.env.OVERSEER_POLL_MS ?? 4000);
-const HEARTBEAT_MS = Number(process.env.OVERSEER_HEARTBEAT_MS ?? 10000);
+const BASE_URL = (process.env.BOTARENA_URL ?? "").replace(/\/+$/, "");
+const KEY = process.env.BOTARENA_KEY ?? "";
+const POLL_MS = Number(process.env.BOTARENA_POLL_MS ?? 4000);
+const HEARTBEAT_MS = Number(process.env.BOTARENA_HEARTBEAT_MS ?? 10000);
 
 if (!BASE_URL || !KEY) {
-  console.error("[worker] Set OVERSEER_URL and OVERSEER_KEY (copy both from the bot console).");
+  console.error("[worker] Set BOTARENA_URL and BOTARENA_KEY (copy both from the bot console).");
   process.exit(1);
 }
 
@@ -529,7 +529,7 @@ async function heartbeatLoop() {
   await reportState(state.connected ? "online" : "connecting");
 }
 
-log(`[worker] OVERSEER worker starting · ${BASE_URL}`);
+log(`[worker] BotArena worker starting · ${BASE_URL}`);
 await heartbeatLoop();
 setInterval(heartbeatLoop, HEARTBEAT_MS);
 setInterval(poll, POLL_MS);

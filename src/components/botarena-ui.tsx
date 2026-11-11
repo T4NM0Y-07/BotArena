@@ -1,6 +1,4 @@
 import type { ReactNode } from "react";
-
-export type Tone = "ink" | "lime" | "orange" | "blue" | "pink" | "sand" | "paper";
 import { Link, useNavigate } from "react-router";
 import { LogOut, Terminal } from "lucide-react";
 
@@ -8,6 +6,14 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
 
+export type Tone =
+  | "ink"
+  | "lime"
+  | "orange"
+  | "blue"
+  | "pink"
+  | "sand"
+  | "paper";
 
 export const toneBg: Record<Tone, string> = {
   lime: "bg-nb-lime",
@@ -15,7 +21,18 @@ export const toneBg: Record<Tone, string> = {
   blue: "bg-nb-blue",
   pink: "bg-nb-pink",
   sand: "bg-nb-sand",
+  paper: "bg-nb-paper",
   ink: "bg-nb-ink",
+};
+
+export const toneBorder: Record<Tone, string> = {
+  lime: "border-nb-lime",
+  orange: "border-nb-orange",
+  blue: "border-nb-blue",
+  pink: "border-nb-pink",
+  sand: "border-nb-sand",
+  paper: "border-nb-paper",
+  ink: "border-nb-ink",
 };
 
 export function LogoMark({ className }: { className?: string }) {
@@ -25,6 +42,7 @@ export function LogoMark({ className }: { className?: string }) {
         "grid size-9 shrink-0 grid-cols-2 grid-rows-2 gap-[2px] border-[3px] border-nb-ink bg-nb-ink p-[3px]",
         className,
       )}
+      aria-hidden
     >
       <span className="bg-nb-lime" />
       <span className="bg-nb-surface" />
@@ -39,7 +57,7 @@ export function Wordmark({ className }: { className?: string }) {
     <span className={cn("flex items-center gap-3", className)}>
       <LogoMark />
       <span className="flex flex-col leading-none">
-        <span className="font-display text-lg tracking-tight">KeepCrafting</span>
+        <span className="font-display text-lg tracking-tight">BotArena</span>
         <span className="nb-label mt-1 text-[9px] text-muted-foreground">
           Minecraft ops
         </span>
@@ -142,7 +160,13 @@ export function ModeTag({
   );
 }
 
-const AVATAR_COLORS = ["bg-nb-lime", "bg-nb-orange", "bg-nb-blue", "bg-nb-pink", "bg-nb-sand"];
+const AVATAR_COLORS = [
+  "bg-nb-lime",
+  "bg-nb-orange",
+  "bg-nb-blue",
+  "bg-nb-pink",
+  "bg-nb-sand",
+];
 
 const avatarSizes = {
   sm: "size-9 gap-[2px] p-[3px]",
@@ -198,12 +222,12 @@ export function Stat({
   label,
   value,
   sub,
-  tone,
+  tone = "ink",
 }: {
   label: string;
   value: ReactNode;
   sub: string;
-  tone: Tone;
+  tone?: Tone;
 }) {
   return (
     <div className="nb-panel-sm flex flex-col p-4">

@@ -1,7 +1,7 @@
 {
-  "name": "freebuff.com application",
-  "short_name": "freebuff.com",
-  "description": "freebuff.com application",
+  "name": "BotArena",
+  "short_name": "BotArena",
+  "description": "BotArena — Minecraft bot operations console",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

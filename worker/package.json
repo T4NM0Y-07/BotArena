@@ -1,14 +1,14 @@
 {
-  "name": "overseer-worker",
+  "name": "botarena-worker",
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "24/7 Mineflayer worker that executes OVERSEER plain-English orders",
+  "description": "24/7 Mineflayer worker that executes BotArena plain-English orders",
   "bin": {
-    "overseer-worker": "./overseer-worker.mjs"
+    "botarena-worker": "./botarena-worker.mjs"
   },
   "scripts": {
-    "start": "node overseer-worker.mjs"
+    "start": "node botarena-worker.mjs"
   },
   "engines": {
     "node": ">=20"

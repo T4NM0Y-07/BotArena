@@ -1,4 +1,4 @@
-# OVERSEER worker
+# BotArena worker
 
 The web app is the control room. This worker is the part that actually stays
 connected to a Minecraft server, 24/7. It polls the console for orders over
@@ -40,43 +40,43 @@ touches the game.
 ## 4. Start it
 
 ```bash
-OVERSEER_URL="https://your-deployment.convex.site" \
-OVERSEER_KEY="<bot key>" \
-node overseer-worker.mjs
+BOTARENA_URL="https://your-deployment.convex.site" \
+BOTARENA_KEY="<bot key>" \
+node botarena-worker.mjs
 ```
 
 Optional environment variables:
 
 | Variable | Default | Purpose |
 | --- | --- | --- |
-| `OVERSEER_POLL_MS` | `4000` | How often the worker asks for work |
-| `OVERSEER_HEARTBEAT_MS` | `20000` | Heartbeat interval (see note below) |
+| `BOTARENA_POLL_MS` | `4000` | How often the worker asks for work |
+| `BOTARENA_HEARTBEAT_MS` | `20000` | Heartbeat interval (see note below) |
 
 ## 5. Keep it running (systemd)
 
 ```ini
-# /etc/systemd/system/overseer-worker.service
+# /etc/systemd/system/botarena-worker.service
 [Unit]
-Description=OVERSEER Minecraft worker
+Description=BotArena Minecraft worker
 After=network-online.target
 Wants=network-online.target
 
 [Service]
-WorkingDirectory=/opt/overseer/worker
-Environment=OVERSEER_URL=https://your-deployment.convex.site
-Environment=OVERSEER_KEY=replace-with-your-bot-key
-ExecStart=/usr/bin/node overseer-worker.mjs
+WorkingDirectory=/opt/botarena/worker
+Environment=BOTARENA_URL=https://your-deployment.convex.site
+Environment=BOTARENA_KEY=replace-with-your-bot-key
+ExecStart=/usr/bin/node botarena-worker.mjs
 Restart=always
 RestartSec=5
-User=overseer
+User=botarena
 
 [Install]
 WantedBy=multi-user.target
 ```
 
 ```bash
-sudo systemctl enable --now overseer-worker
-journalctl -u overseer-worker -f
+sudo systemctl enable --now botarena-worker
+journalctl -u botarena-worker -f
 ```
 
 `Restart=always` is what makes the setup survive reboots and crashed processes;

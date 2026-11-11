@@ -1,5 +1,5 @@
 /**
- * Branded transactional email for OVERSEER.
+ * Branded transactional email for BotArena.
  *
  * The platform's OTP endpoint uses fixed, generic wording, so sign-in codes and
  * welcome mail go through the shared VLY email integration instead. Everything
@@ -65,7 +65,7 @@ function shell({
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="x-apple-disable-message-reformatting" />
-<title>OVERSEER</title>
+<title>BotArena</title>
 </head>
 <body style="margin:0;padding:0;background:${SAND};">
 <div style="display:none;max-height:0;max-width:0;overflow:hidden;opacity:0;mso-hide:all;">${escapeHtml(preheader)}</div>
@@ -76,7 +76,7 @@ function shell({
     <td style="background:${INK};padding:16px 22px;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td style="font-family:${MONO};font-size:17px;font-weight:bold;letter-spacing:4px;color:${LIME};">OVERSEER</td>
+          <td style="font-family:${MONO};font-size:17px;font-weight:bold;letter-spacing:4px;color:${LIME};">BotArena</td>
           <td align="right" style="font-family:${MONO};font-size:9px;letter-spacing:2px;color:#b8b0a0;">REMOTE MC OPS</td>
         </tr>
       </table>
@@ -97,7 +97,7 @@ function shell({
   <tr>
     <td style="padding:16px 26px 20px;border-top:2px solid ${RULE};">
       <p style="margin:0;font-family:${MONO};font-size:9px;letter-spacing:1.6px;line-height:18px;text-transform:uppercase;color:${MUTED};">
-        OVERSEER · remote Minecraft operations<br />
+        BotArena · remote Minecraft operations<br />
         ${site ? `<a href="${site}" style="color:${INK};text-decoration:underline;">${escapeHtml(site)}</a> · ` : ""}transactional message about your operator account
       </p>
     </td>
@@ -114,14 +114,14 @@ function shell({
 
 function textFooter(appUrl?: string) {
   const site = appLink(appUrl, "/");
-  return `\n\n--\nOVERSEER // remote Minecraft operations${site ? `\n${site}` : ""}\nTransactional message about your operator account.\nNo passwords. No shortcuts. Just the console.`;
+  return `\n\n--\nBotArena // remote Minecraft operations${site ? `\n${site}` : ""}\nTransactional message about your operator account.\nNo passwords. No shortcuts. Just the console.`;
 }
 
 export function otpEmail({ email, code }: { email: string; code: string }): BrandedEmail {
   const safeEmail = escapeHtml(email);
   const content = `
     <p style="margin:0 0 18px;">
-      This six-digit code signs you in to the OVERSEER console. It is tied to
+      This six-digit code signs you in to the BotArena console. It is tied to
       <strong style="font-family:${MONO};font-size:13px;color:${INK};">${safeEmail}</strong>,
       works once, and expires in <strong>15 minutes</strong>.
     </p>
@@ -139,7 +139,7 @@ export function otpEmail({ email, code }: { email: string; code: string }): Bran
       <tr>
         <td style="padding:12px 14px;font-family:${BODY};font-size:13px;line-height:22px;color:${BODY_TEXT};">
           <strong style="color:${INK};">Didn't request this?</strong>
-          Someone typed your address at the OVERSEER console. No action needed —
+          Someone typed your address at the BotArena console. No action needed —
           the code is useless without this inbox.
         </td>
       </tr>
@@ -150,25 +150,25 @@ export function otpEmail({ email, code }: { email: string; code: string }): Bran
     </p>`;
 
   return {
-    subject: `OVERSEER // access code ${code}`,
+    subject: `BotArena // access code ${code}`,
     html: shell({
-      preheader: `Your one-time OVERSEER access code is ${code}. Expires in 15 minutes.`,
+      preheader: `Your one-time BotArena access code is ${code}. Expires in 15 minutes.`,
       kicker: "Auth / verification",
       heading: "Your access code",
       content,
     }),
-    text: `OVERSEER // REMOTE MC OPS
+    text: `BotArena // REMOTE MC OPS
 =========================
 YOUR ACCESS CODE
 
      ${code}
 
-This six-digit code signs you in to the OVERSEER console. It is tied to ${email},
+This six-digit code signs you in to the BotArena console. It is tied to ${email},
 works once, and expires in 15 minutes.
 
 ONE-TIME ACCESS CODE / DO NOT FORWARD
 
-Didn't request this? Someone typed your address at the OVERSEER console. No
+Didn't request this? Someone typed your address at the BotArena console. No
 action needed — the code is useless without this inbox.
 
 Access is email-only by design. We never ask for a password, and there is no
@@ -248,7 +248,7 @@ export function welcomeEmail({
     </p>`;
 
   return {
-    subject: "OVERSEER // clearance granted",
+    subject: "BotArena // clearance granted",
     html: shell({
       preheader: "Your operator console is live. One trial bot, email-only access, no password.",
       kicker: "Access / granted",
@@ -256,7 +256,7 @@ export function welcomeEmail({
       content,
       appUrl,
     }),
-    text: `OVERSEER // REMOTE MC OPS
+    text: `BotArena // REMOTE MC OPS
 =========================
 CLEARANCE GRANTED
 
@@ -296,7 +296,25 @@ export async function sendBrandedEmail({
   text,
 }: { to: string } & BrandedEmail): Promise<void> {
   const key = process.env.VLY_INTEGRATION_KEY;
+
+  // Direct provider fallback: one secret, plain HTTP, no SDK. Used when the
+  // platform gateway key is not injected into this deployment.
+  if (!key && process.env.RESEND_API_KEY) {
+    await sendWithResend({ to, subject, html, text });
+    return;
+  }
+
   if (!key) {
+    // Local/anonymous deployments have no mail credential. When the operator
+    // opts in with BOTARENA_DEV_INBOX=1, mail is printed to the Convex logs so
+    // OTP sign-in can be completed offline. Hosted deployments keep failing
+    // loudly instead of silently dropping mail.
+    if (process.env.BOTARENA_DEV_INBOX === "1") {
+      console.log(
+        `[botarena:dev-mail] to=${to} subject=${subject}\n${text}`,
+      );
+      return;
+    }
     throw new Error(
       "VLY_INTEGRATION_KEY is not set on this Convex deployment, so mail cannot be sent.",
     );
@@ -328,5 +346,41 @@ export async function sendBrandedEmail({
   if (!response.ok || payload.success === false) {
     const detail = payload.error ? `: ${payload.error}` : "";
     throw new Error(`Email gateway rejected the message (HTTP ${response.status})${detail}`);
+  }
+}
+
+/**
+ * Sends through Resend's HTTP API. `MAIL_FROM` must be a verified sender
+ * (the shared onboarding address works for the account owner while testing).
+ */
+async function sendWithResend({
+  to,
+  subject,
+  html,
+  text,
+}: { to: string } & BrandedEmail): Promise<void> {
+  const key = process.env.RESEND_API_KEY;
+  if (!key) throw new Error("RESEND_API_KEY is not set on this deployment.");
+
+  const from = process.env.MAIL_FROM || "BotArena <onboarding@resend.dev>";
+
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${key}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ from, to: [to], subject, html, text }),
+  });
+
+  const payload = (await response.json().catch(() => ({}))) as {
+    id?: string;
+    message?: string;
+  };
+
+  if (!response.ok) {
+    throw new Error(
+      `Resend rejected the message (HTTP ${response.status})${payload.message ? `: ${payload.message}` : ""}`,
+    );
   }
 }

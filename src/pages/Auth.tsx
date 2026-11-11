@@ -9,7 +9,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 
-import { LogoMark, Wordmark } from "@/components/keepcraft-ui";
+import { LogoMark, Wordmark } from "@/components/botarena-ui";
 import { useAuth } from "@/hooks/use-auth";
 import { ArrowRight, Loader2, Mail, RadioTower } from "lucide-react";
 import { Suspense, useEffect, useState } from "react";
@@ -305,7 +305,7 @@ function Auth({ redirectAfterAuth }: AuthProps = {}) {
               to="/"
               className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] underline decoration-2 underline-offset-2 hover:bg-nb-lime"
             >
-              KeepCrafting
+              BotArena
             </Link>
           </div>
         </section>

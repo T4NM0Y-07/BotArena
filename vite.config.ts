@@ -96,6 +96,20 @@ export default defineConfig({
     // Bind to all interfaces so the browser runtime's server-ready event fires.
     host: true,
     port: 5173,
+    /**
+     * The local Convex deployment listens on 127.0.0.1:3210, which is only
+     * reachable from this machine. Proxying it under /convex lets any origin
+     * (VM preview, tunnel, another device) reach the same backend, HTTP and
+     * WebSocket alike. Cloud deployments never use this path.
+     */
+    proxy: {
+      "/convex": {
+        target: "http://127.0.0.1:3210",
+        changeOrigin: true,
+        ws: true,
+        rewrite: (requestPath) => requestPath.replace(/^\/convex/, ""),
+      },
+    },
     // Keep HMR on, but disable full-screen error overlay
     hmr: {
       overlay: false,

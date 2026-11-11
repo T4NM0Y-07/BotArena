@@ -28,8 +28,14 @@ export function uptimeSince(timestamp?: number): string {
   return `${Math.floor(hours / 24)}d ${hours % 24}h`;
 }
 
-/** Derives the HTTP-actions host from the Convex cloud URL. */
+/**
+ * The HTTP-actions host the companion worker talks to.
+ * `npx convex dev` sets VITE_CONVEX_SITE_URL for local deployments, where the
+ * site host is a different port; cloud deployments are derived.
+ */
 export function convexSiteUrl(): string {
+  const site = import.meta.env.VITE_CONVEX_SITE_URL as string | undefined;
+  if (site) return site.replace(/\/$/, "");
   const url = import.meta.env.VITE_CONVEX_URL as string | undefined;
   if (!url) return "https://your-deployment.convex.site";
   return url.replace(".convex.cloud", ".convex.site").replace(/\/$/, "");

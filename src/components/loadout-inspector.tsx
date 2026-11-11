@@ -2,7 +2,8 @@ import { useState } from "react";
 import { ChevronDown, Package } from "lucide-react";
 
 import type { Doc } from "@/convex/_generated/dataModel";
-import { Panel, PixelAvatar } from "@/components/keepcraft-ui";
+import { Panel } from "@/components/botarena-ui";
+import { PixelAvatar } from "@/components/botarena-ui";
 import { timeAgo } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -243,6 +244,8 @@ export function LoadoutInspector({ bot }: { bot: Doc<"bots"> }) {
 
   const items = loadout?.items ?? [];
   const heldSlot = loadout?.heldSlot ?? 0;
+  /** "auto" bots report the real server version; prefer it for textures. */
+  const assetVersion = bot.serverVersion ?? bot.version;
   const at = (slot: number) => items.find((entry) => entry.slot === slot);
 
   const mainHand = at(36 + heldSlot);
@@ -280,7 +283,7 @@ export function LoadoutInspector({ bot }: { bot: Doc<"bots"> }) {
                   count={entry?.count}
                   label={slot.label}
                   hint="armor"
-                  version={bot.version}
+                  version={assetVersion}
                   className="size-10"
                 />
               );
@@ -313,14 +316,14 @@ export function LoadoutInspector({ bot }: { bot: Doc<"bots"> }) {
               count={mainHand?.count}
               label="Main hand"
               hint={`slot ${heldSlot + 1}`}
-              version={bot.version}
+              version={assetVersion}
               className="size-10"
             />
             <ItemSlot
               item={offHand?.item}
               count={offHand?.count}
               label="Off hand"
-              version={bot.version}
+              version={assetVersion}
               className="size-10"
             />
           </div>
@@ -345,7 +348,7 @@ export function LoadoutInspector({ bot }: { bot: Doc<"bots"> }) {
               count={entry?.count}
               label={`Hotbar ${index + 1}`}
               hint="hotbar"
-              version={bot.version}
+              version={assetVersion}
               selected={index === heldSlot}
             />
           );
@@ -381,7 +384,7 @@ export function LoadoutInspector({ bot }: { bot: Doc<"bots"> }) {
                 count={entry?.count}
                 label={`Bag ${index + 1}`}
                 hint="inventory"
-                version={bot.version}
+                version={assetVersion}
               />
             );
           })}

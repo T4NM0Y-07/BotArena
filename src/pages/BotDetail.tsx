@@ -37,9 +37,9 @@ import {
   AppBar,
   ModeTag,
   Panel,
-  PixelAvatar,
   StatusPill,
-} from "@/components/keepcraft-ui";
+} from "@/components/botarena-ui";
+import { PixelAvatar } from "@/components/botarena-ui";
 import { clock, convexSiteUrl, timeAgo, uptimeSince } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -191,7 +191,7 @@ export default function BotDetail() {
 
   const startCommand = [
     "cd worker && npm install",
-    `KeepCrafting_URL=${siteUrl} KeepCrafting_KEY=${bot.workerKey} node keepcraft-worker.mjs`,
+    `BOTARENA_URL=${siteUrl} BOTARENA_KEY=${bot.workerKey} node botarena-worker.mjs`,
   ].join("\n");
 
   return (
