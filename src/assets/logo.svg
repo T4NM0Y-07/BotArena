@@ -1,1 +1,128 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 96.81 96.81"><rect width="96.81" height="96.81" rx="18"/><g fill="#fff"><rect x="24.67" y="24.67" width="47.47" height="11.87"/><rect x="24.67" y="36.54" width="11.87" height="35.61"/><rect x="40.06" y="39.98" width="23.74" height="11.87"/><rect x="40.06" y="51.85" width="11.87" height="20.3"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="BotArena">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1d2a3d"/>
+      <stop offset="1" stop-color="#0f1826"/>
+    </linearGradient>
+    <linearGradient id="stoneTop" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d7dade"/>
+      <stop offset="1" stop-color="#b4b8be"/>
+    </linearGradient>
+    <linearGradient id="face" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#bcc0c6"/>
+      <stop offset="1" stop-color="#9aa1a8"/>
+    </linearGradient>
+    <linearGradient id="copper" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#d18b56"/>
+      <stop offset="1" stop-color="#a75f33"/>
+    </linearGradient>
+    <linearGradient id="plate" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4f6f9"/>
+      <stop offset="1" stop-color="#c6ccd4"/>
+    </linearGradient>
+    <radialGradient id="eye" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#fff4ea"/>
+      <stop offset="0.22" stop-color="#ff8f6c"/>
+      <stop offset="0.58" stop-color="#e02524"/>
+      <stop offset="1" stop-color="#6b0a0f"/>
+    </radialGradient>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="13" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- tile -->
+  <rect width="512" height="512" rx="104" fill="url(#bg)"/>
+  <rect x="11" y="11" width="490" height="490" rx="95" fill="none" stroke="#33465f" stroke-width="6" opacity="0.9"/>
+
+  <!-- side antenna / ear unit -->
+  <g stroke="#11151c" stroke-width="4">
+    <rect x="44" y="116" width="20" height="13" rx="3" fill="url(#copper)"/>
+    <rect x="62" y="122" width="36" height="10" rx="3" fill="#8f959d"/>
+    <rect x="96" y="110" width="12" height="34" rx="3" fill="#8f959d"/>
+    <rect x="74" y="196" width="20" height="46" rx="3" fill="url(#copper)"/>
+  </g>
+
+  <!-- head block: right side (depth) -->
+  <rect x="386" y="74" width="38" height="290" fill="#7a8089"/>
+  <rect x="386" y="74" width="38" height="10" fill="#9aa0a8"/>
+
+  <!-- head block: front face -->
+  <rect x="92" y="64" width="296" height="300" fill="url(#face)"/>
+  <rect x="92" y="64" width="296" height="44" fill="url(#stoneTop)"/>
+  <rect x="92" y="106" width="296" height="6" fill="#8b9199" opacity="0.85"/>
+  <rect x="92" y="64" width="12" height="300" fill="#8e949c" opacity="0.55"/>
+  <rect x="92" y="336" width="296" height="28" fill="#9ba1a9"/>
+
+  <!-- voxel stone specks -->
+  <g fill="#cdd1d7" opacity="0.9">
+    <rect x="112" y="118" width="10" height="10"/>
+    <rect x="232" y="114" width="8" height="8"/>
+    <rect x="300" y="118" width="12" height="8"/>
+    <rect x="340" y="140" width="12" height="12"/>
+    <rect x="122" y="300" width="10" height="10"/>
+    <rect x="300" y="332" width="10" height="8"/>
+    <rect x="352" y="300" width="8" height="10"/>
+    <rect x="150" y="120" width="6" height="6"/>
+  </g>
+  <g fill="#8b9199" opacity="0.75">
+    <rect x="256" y="120" width="10" height="8"/>
+    <rect x="316" y="146" width="8" height="8"/>
+    <rect x="140" y="150" width="8" height="8"/>
+    <rect x="366" y="122" width="8" height="10"/>
+    <rect x="118" y="332" width="8" height="8"/>
+    <rect x="336" y="330" width="10" height="6"/>
+    <rect x="196" y="118" width="6" height="8"/>
+  </g>
+
+  <!-- eye brows -->
+  <rect x="116" y="140" width="104" height="15" fill="#d0d4d9"/>
+  <rect x="116" y="155" width="104" height="5" fill="#6f757d"/>
+  <rect x="276" y="140" width="104" height="15" fill="#d0d4d9"/>
+  <rect x="276" y="155" width="104" height="5" fill="#6f757d"/>
+
+  <!-- eye sockets -->
+  <rect x="112" y="158" width="112" height="104" rx="4" fill="#6c727a"/>
+  <rect x="120" y="166" width="96" height="88" fill="#20242b"/>
+  <rect x="272" y="158" width="112" height="104" rx="4" fill="#6c727a"/>
+  <rect x="280" y="166" width="96" height="88" fill="#20242b"/>
+
+  <!-- glowing red eyes -->
+  <g filter="url(#glow)">
+    <rect x="120" y="166" width="96" height="88" fill="#ff2f2f" opacity="0.4"/>
+    <rect x="280" y="166" width="96" height="88" fill="#ff2f2f" opacity="0.4"/>
+    <rect x="128" y="174" width="80" height="72" rx="4" fill="url(#eye)"/>
+    <rect x="288" y="174" width="80" height="72" rx="4" fill="url(#eye)"/>
+  </g>
+  <rect x="158" y="198" width="20" height="20" fill="#ffeade" opacity="0.9"/>
+  <rect x="318" y="198" width="20" height="20" fill="#ffeade" opacity="0.9"/>
+
+  <!-- mouth grill -->
+  <rect x="170" y="272" width="148" height="64" rx="6" fill="#4b5058"/>
+  <rect x="176" y="278" width="136" height="52" fill="#181c23"/>
+  <g fill="#b4b9c0">
+    <rect x="184" y="284" width="12" height="40"/>
+    <rect x="206" y="284" width="12" height="40"/>
+    <rect x="228" y="284" width="12" height="40"/>
+    <rect x="250" y="284" width="12" height="40"/>
+    <rect x="272" y="284" width="12" height="40"/>
+    <rect x="294" y="284" width="12" height="40"/>
+  </g>
+
+  <!-- copper control block on the right -->
+  <rect x="420" y="148" width="16" height="148" fill="#6f757d" stroke="#11151c" stroke-width="4"/>
+  <rect x="424" y="164" width="46" height="116" rx="4" fill="url(#copper)" stroke="#11151c" stroke-width="5"/>
+  <rect x="436" y="178" width="16" height="16" fill="#e2a476"/>
+  <rect x="436" y="212" width="16" height="16" fill="#8d4e27"/>
+  <rect x="440" y="246" width="18" height="18" fill="#e33b2c"/>
+  <circle cx="430" cy="172" r="4" fill="#f2d6ba"/>
+
+  <!-- nameplate -->
+  <rect x="26" y="380" width="460" height="96" rx="14" fill="url(#plate)" stroke="#101720" stroke-width="8"/>
+  <rect x="40" y="394" width="432" height="68" rx="9" fill="none" stroke="#b7bec8" stroke-width="4"/>
+  <text x="256" y="451" text-anchor="middle" font-family="'Arial Black', Impact, 'Segoe UI', sans-serif" font-size="62" font-weight="900" letter-spacing="1" fill="#f28c4a" stroke="#241407" stroke-width="10" paint-order="stroke">BOTARENA</text>
+</svg>

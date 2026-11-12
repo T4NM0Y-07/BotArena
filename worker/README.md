@@ -51,6 +51,7 @@ Optional environment variables:
 | --- | --- | --- |
 | `BOTARENA_POLL_MS` | `4000` | How often the worker asks for work |
 | `BOTARENA_HEARTBEAT_MS` | `20000` | Heartbeat interval (see note below) |
+| `BOTARENA_CONNECT_TIMEOUT_MS` | `8000` | TCP reachability probe before each connect attempt; a blocked host:port reports a clear error instead of hanging |
 
 ## 5. Keep it running (systemd)
 
