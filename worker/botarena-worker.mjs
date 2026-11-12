@@ -11,6 +11,7 @@
  *   node botarena-worker.mjs
  */
 
+import net from "node:net";
 import mineflayer from "mineflayer";
 
 let pathfinderModule = null;
@@ -24,9 +25,25 @@ const BASE_URL = (process.env.BOTARENA_URL ?? "").replace(/\/+$/, "");
 const KEY = process.env.BOTARENA_KEY ?? "";
 const POLL_MS = Number(process.env.BOTARENA_POLL_MS ?? 4000);
 const HEARTBEAT_MS = Number(process.env.BOTARENA_HEARTBEAT_MS ?? 10000);
+const CONNECT_TIMEOUT_MS = Number(process.env.BOTARENA_CONNECT_TIMEOUT_MS ?? 8000);
 
 if (!BASE_URL || !KEY) {
   console.error("[worker] Set BOTARENA_URL and BOTARENA_KEY (copy both from the bot console).");
+  process.exit(1);
+}
+
+// Bot keys are 16 random bytes hex-encoded, so always 32 lowercase hex characters.
+// A mangled or wrong key would otherwise poll "Unknown worker key" forever.
+if (!/^[0-9a-f]{32}$/.test(KEY)) {
+  console.error(
+    `[worker] BOTARENA_KEY is not a valid bot key: expected 32 lowercase hex characters, got ${KEY.length} character(s).`,
+  );
+  if (/^[0-9a-f]{32}$/i.test(KEY)) {
+    console.error("[worker] Bot keys are lowercase hex only — re-copy the key instead of retyping it.");
+  }
+  console.error(
+    "[worker] Open the bot page → Worker bridge panel, copy the key (Rotate key if unsure), and pass it as BOTARENA_KEY.",
+  );
   process.exit(1);
 }
 
@@ -39,6 +56,8 @@ const state = {
   timers: [],
   routine: 0,
   reconnectAttempts: 0,
+  connecting: false,
+  reachError: null,
 };
 
 const BLOCK_NAMES = {
@@ -153,9 +172,51 @@ async function report(payload) {
   }
 }
 
-function connect(config) {
-  if (state.bot) return;
+/**
+ * Cheap TCP probe so a firewalled or wrong host:port fails in seconds with a
+ * clear message, instead of hanging until mineflayer's own connect timeout.
+ */
+function probeTcp(host, port, timeoutMs) {
+  return new Promise((resolve, reject) => {
+    const socket = net.connect({ host, port });
+    const finish = (error) => {
+      socket.removeAllListeners();
+      socket.once("error", () => {});
+      socket.destroy();
+      if (error) reject(error);
+      else resolve();
+    };
+    socket.setTimeout(timeoutMs);
+    socket.once("connect", () => finish(null));
+    socket.once("timeout", () => finish(new Error(`timed out after ${timeoutMs} ms`)));
+    socket.once("error", (error) => finish(error));
+  });
+}
+
+async function connect(config) {
+  if (state.bot || state.connecting) return;
   state.config = config;
+  state.connecting = true;
+  try {
+    // Retries after a failure stay quiet; the error below is logged once.
+    if (!state.reachError) log(`[worker] checking ${config.host}:${config.port}`);
+    await probeTcp(config.host, config.port, CONNECT_TIMEOUT_MS);
+    state.reachError = null;
+  } catch (error) {
+    const detail = error.code ?? error.message;
+    const message =
+      `Cannot reach ${config.host}:${config.port} (${detail}). Check the host, port, firewall or VPN; ` +
+      "raise BOTARENA_CONNECT_TIMEOUT_MS if the server is only slow.";
+    if (state.reachError !== message) {
+      state.reachError = message;
+      log(`[worker] ${message}`);
+      void reportState("error", message);
+    }
+    return;
+  } finally {
+    state.connecting = false;
+  }
+
   log(`[worker] connecting to ${config.host}:${config.port} as ${config.username}`);
   void reportState("connecting", `Connecting to ${config.host}:${config.port}`);
 
@@ -173,6 +234,7 @@ function connect(config) {
   bot.once("spawn", () => {
     state.connected = true;
     state.reconnectAttempts = 0;
+    state.reachError = null;
     if (pathfinderModule) {
       const movements = new pathfinderModule.Movements(bot);
       movements.canDig = false;
@@ -198,7 +260,7 @@ function connect(config) {
       state.reconnectAttempts = Math.min(state.reconnectAttempts + 1, 6);
       const delay = Math.min(30000, 2000 * 2 ** state.reconnectAttempts);
       log(`[worker] reconnect in ${Math.round(delay / 1000)}s`);
-      setTimeout(() => connect(state.config), delay);
+      setTimeout(() => void connect(state.config), delay);
     }
   });
 
@@ -221,6 +283,17 @@ function connect(config) {
 function requireBot() {
   if (!state.bot || !state.connected) throw new Error("Not connected to the server.");
   return state.bot;
+}
+
+/**
+ * bot.quit only exists once mineflayer's kick plugin is loaded, so a bot that
+ * never finished connecting has no quit(). bot.end is always defined.
+ */
+function closeBot(reason = "Worker stopped") {
+  const bot = state.bot;
+  if (!bot) return;
+  if (typeof bot.quit === "function") bot.quit(reason);
+  else if (typeof bot.end === "function") bot.end(reason);
 }
 
 async function goNear(position, range = 1) {
@@ -506,11 +579,11 @@ async function poll() {
         if (state.bot) {
           log("[worker] runtime paused, leaving the server");
           state.config = { ...data.bot, autoReconnect: false };
-          state.bot.quit();
+          closeBot("Runtime paused");
         }
         return;
       }
-      if (!state.bot) connect(data.bot);
+      if (!state.bot) void connect(data.bot);
     }
 
     if (data.order && !state.current) {
@@ -526,7 +599,10 @@ async function poll() {
 
 async function heartbeatLoop() {
   // The loadout is attached here, so the console inventory refreshes live.
-  await reportState(state.connected ? "online" : "connecting");
+  await reportState(
+    state.connected ? "online" : state.reachError ? "error" : "connecting",
+    state.reachError ?? undefined,
+  );
 }
 
 log(`[worker] BotArena worker starting · ${BASE_URL}`);
@@ -544,7 +620,7 @@ async function shutdown(signal) {
   } catch {
     /* ignore */
   }
-  state.bot?.quit();
+  closeBot();
   setTimeout(() => process.exit(0), 500);
 }
 

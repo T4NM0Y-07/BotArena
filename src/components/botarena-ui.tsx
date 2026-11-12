@@ -39,15 +39,39 @@ export function LogoMark({ className }: { className?: string }) {
   return (
     <span
       className={cn(
-        "grid size-9 shrink-0 grid-cols-2 grid-rows-2 gap-[2px] border-[3px] border-nb-ink bg-nb-ink p-[3px]",
+        "grid size-9 shrink-0 place-items-center overflow-hidden border-[3px] border-nb-ink bg-[#16202f]",
         className,
       )}
       aria-hidden
     >
-      <span className="bg-nb-lime" />
-      <span className="bg-nb-surface" />
-      <span className="bg-nb-surface" />
-      <span className="bg-nb-lime" />
+      <svg viewBox="0 0 64 64" className="h-full w-full" role="presentation">
+        {/* stone head block */}
+        <rect x="52" y="8" width="4" height="44" fill="#6f757d" />
+        <rect x="10" y="8" width="44" height="44" fill="#b6bac0" />
+        <rect x="10" y="8" width="44" height="9" fill="#d4d8dd" />
+        <rect x="10" y="47" width="44" height="5" fill="#9ba1a9" />
+        <g fill="#8b9199">
+          <rect x="30" y="11" width="4" height="4" />
+          <rect x="45" y="19" width="4" height="4" />
+          <rect x="13" y="41" width="4" height="4" />
+        </g>
+        {/* copper antenna */}
+        <rect x="3" y="13" width="9" height="4" fill="#c8814f" />
+        <rect x="9" y="11" width="3" height="9" fill="#8f959d" />
+        {/* glowing eyes */}
+        <rect x="15" y="20" width="14" height="14" fill="#20242b" />
+        <rect x="17" y="22" width="10" height="10" fill="#e6332a" />
+        <rect x="33" y="20" width="14" height="14" fill="#20242b" />
+        <rect x="35" y="22" width="10" height="10" fill="#e6332a" />
+        {/* mouth grill */}
+        <rect x="20" y="36" width="24" height="11" fill="#181c23" />
+        <g fill="#b4b9c0">
+          <rect x="22" y="38" width="3" height="7" />
+          <rect x="27" y="38" width="3" height="7" />
+          <rect x="32" y="38" width="3" height="7" />
+          <rect x="37" y="38" width="3" height="7" />
+        </g>
+      </svg>
     </span>
   );
 }
